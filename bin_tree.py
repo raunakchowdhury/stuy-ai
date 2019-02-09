@@ -10,16 +10,18 @@ class Node:
     def get_ordered_string(self):
         '''
         in-order traversal.
+        uses lists to make concatonation more efficient.
+        list elements are joined at the end are returned as a string.
         '''
-        sequence = ''
+        sequence_list = []
         if self.smaller == None and self.equal_or_larger == None:
             return str(self.value)
         if self.smaller:
-            sequence += self.smaller.get_ordered_string()
-        sequence += str(self.value)
+            sequence_list.append(self.smaller.get_ordered_string())
+        sequence_list.append(str(self.value))
         if self.equal_or_larger:
-            sequence += self.equal_or_larger.get_ordered_string()
-        return sequence
+            sequence_list.append(self.equal_or_larger.get_ordered_string())
+        return ''.join(sequence_list)
 
     def clear(self):
         '''
