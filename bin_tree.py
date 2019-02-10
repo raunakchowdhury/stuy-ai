@@ -7,6 +7,23 @@ class Node:
     def __str__(self):
         return str(self.value)
 
+    # def get_ordered_string(self):
+    #     '''
+    #     in-order traversal.
+    #     uses lists to make concatonation more efficient.
+    #     list elements are joined at the end are returned as a string.
+    #     DEPRECATED VERSION
+    #     '''
+    #     sequence_list = []
+    #     if self.smaller == None and self.equal_or_larger == None:
+    #         return str(self.value)
+    #     if self.smaller:
+    #         sequence_list.append(self.smaller.get_ordered_string())
+    #     sequence_list.append(str(self.value))
+    #     if self.equal_or_larger:
+    #         sequence_list.append(self.equal_or_larger.get_ordered_string())
+    #     return ''.join(sequence_list)
+
     def get_ordered_string(self):
         '''
         in-order traversal.
@@ -15,13 +32,14 @@ class Node:
         '''
         sequence_list = []
         if self.smaller == None and self.equal_or_larger == None:
-            return str(self.value)
+            return [self.value]
         if self.smaller:
-            sequence_list.append(self.smaller.get_ordered_string())
-        sequence_list.append(str(self.value))
+            sequence_list.extend(self.smaller.get_ordered_string())
+        sequence_list.append(self.value)
         if self.equal_or_larger:
-            sequence_list.append(self.equal_or_larger.get_ordered_string())
-        return ''.join(sequence_list)
+            sequence_list.extend(self.equal_or_larger.get_ordered_string())
+        return sequence_list
+
 
     def clear(self):
         '''
@@ -90,7 +108,8 @@ class BinTree:
 
     def get_ordered_string(self):
         # returns a list of all values in ordered sequence
-        return [int(num) for num in self.start_node.get_ordered_string()]
+        # return [int(num) for num in self.start_node.get_ordered_string()]
+        return self.start_node.get_ordered_string()
 
     def clear(self):
         # clears the list of all nodes
