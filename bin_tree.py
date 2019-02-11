@@ -78,15 +78,18 @@ class BinTree:
         while cur:
             prev_cur = cur
             # if V is greater, descend right
-            if V >= cur.value:
+            if V > cur.value:
                 cur = cur.equal_or_larger
             # if V is smaller, descend left
-            else:
+            elif V < cur.value:
                 cur = cur.smaller
+            # if V is equal to a current node, just drop it
+            else:
+                return
         # add in the new node
-        if V >= prev_cur.value:
+        if V > prev_cur.value:
             prev_cur.equal_or_larger = node
-        else:
+        elif V < prev_cur.value:
             prev_cur.smaller = node
 
     def has(self, V):
@@ -116,7 +119,7 @@ class BinTree:
         self.start_node.clear()
 
 if __name__ == '__main__':
-    tree = BinTree([4,5,6,3,7])
+    tree = BinTree([4,5,6,3,3,7])
     print('Do tree has 7???: ', tree.has(7))
     print('Do tree has 3???: ', tree.has(3))
     print('Do tree has 104???: ', tree.has(104))
