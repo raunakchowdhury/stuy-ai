@@ -58,7 +58,7 @@ class BinTree:
         #if it reaches this point, it's not in the tree
         return False
 
-    def get_ordered_string(self):
+    def get_ordered_list(self):
         # returns a list of all values in ordered sequence
         # return [int(num) for num in self.start_node.get_ordered_string()]
         def ordered_helper(node):
@@ -128,12 +128,37 @@ class BinTree:
         #if it reaches this point, it's not in the tree
         return total
 
+def process(in_file_name, out_file_name):
+    '''
+    Takes in a file location, uses BinaryTree.has_depth on it, and inputs the new values into the out_file_name.
+    '''
+    f = open(in_file_name, 'r')
+    lines = f.read().split('\n')
+    words = lines[0].split(',')
+    ints = [int(x) for x in words]
+    tree = BinTree(ints)
+    # second line ops
+    second_words = lines[1].split(',')
+    second_ints = [int(x) for x in second_words]
+    depths = [tree.has_depth(x) for x in second_ints]
+    print('Average:', sum(depths) / len(depths))
+    print('Length of tree:', len(tree.get_ordered_list()))
+    f.close()
+    # write all depths into the second file
+    f = open(out_file_name, 'w')
+    depths = [str(x) for x in depths]
+    string_depths = ','.join(depths)
+    f.write(string_depths+'\n')
+    f.close()
+
 if __name__ == '__main__':
-    tree = BinTree([4,5,6,3,3,7])
-    print('Do tree has 7???:', tree.has_depth(7))
-    print('Do tree has 3???:', tree.has_depth(3))
-    print('Do tree has 104???:', tree.has_depth(104))
+    import sys
+    # tree = BinTree([5,7,3])
+    # print('Do tree has 7???:', tree.has_depth(7))
+    # print('Do tree has 3???:', tree.has_depth(3))
+    # print('Do tree has 20???:', tree.has_depth(20))
     # print('Printing ordered list:', tree.get_ordered_string())
     # print('Clearing tree....')
     # tree.clear()
     # print('Printing ordered list:', tree.get_ordered_string())
+    process(sys.argv[1], sys.argv[2])
