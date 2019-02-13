@@ -153,12 +153,4 @@ def process(in_file_name, out_file_name):
 
 if __name__ == '__main__':
     import sys
-    # tree = BinTree([5,7,3])
-    # print('Do tree has 7???:', tree.has_depth(7))
-    # print('Do tree has 3???:', tree.has_depth(3))
-    # print('Do tree has 20???:', tree.has_depth(20))
-    # print('Printing ordered list:', tree.get_ordered_string())
-    # print('Clearing tree....')
-    # tree.clear()
-    # print('Printing ordered list:', tree.get_ordered_string())
     process(sys.argv[1], sys.argv[2])
