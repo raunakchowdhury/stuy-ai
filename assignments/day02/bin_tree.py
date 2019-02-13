@@ -107,29 +107,33 @@ class BinTree:
 
         clear_helper(self.start_node)
 
-    # def get_ordered_string(self):
-    #     '''
-    #     in-order traversal.
-    #     uses lists to make concatonation more efficient.
-    #     list elements are joined at the end are returned as a string.
-    #     DEPRECATED VERSION
-    #     '''
-    #     sequence_list = []
-    #     if self.smaller == None and self.larger == None:
-    #         return str(self.value)
-    #     if self.smaller:
-    #         sequence_list.append(self.smaller.get_ordered_string())
-    #     sequence_list.append(str(self.value))
-    #     if self.larger:
-    #         sequence_list.append(self.larger.get_ordered_string())
-    #     return ''.join(sequence_list)
+    def has_depth(self, V):
+        '''
+        Finds V and returns the # of nodes traversed.
+        '''
+        total = 0
+        cur = self.start_node
+        prev_cur = cur
+        while cur:
+            total += 1
+            prev_cur = cur
+            # if V is greater, descend right
+            if V == cur.value:
+                return total
+            elif V > cur.value:
+                cur = cur.larger
+            # if V is smaller, descend left
+            else:
+                cur = cur.smaller
+        #if it reaches this point, it's not in the tree
+        return total
 
 if __name__ == '__main__':
     tree = BinTree([4,5,6,3,3,7])
-    print('Do tree has 7???: ', tree.has(7))
-    print('Do tree has 3???: ', tree.has(3))
-    print('Do tree has 104???: ', tree.has(104))
-    print('Printing ordered list:', tree.get_ordered_string())
-    print('Clearing tree....')
-    tree.clear()
-    print('Printing ordered list:', tree.get_ordered_string())
+    print('Do tree has 7???:', tree.has_depth(7))
+    print('Do tree has 3???:', tree.has_depth(3))
+    print('Do tree has 104???:', tree.has_depth(104))
+    # print('Printing ordered list:', tree.get_ordered_string())
+    # print('Clearing tree....')
+    # tree.clear()
+    # print('Printing ordered list:', tree.get_ordered_string())
