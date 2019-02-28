@@ -117,9 +117,13 @@ class Pqueue:
 
 
 if __name__ == '__main__':
+    import sys
+    number = 1000
+    if len(sys.argv) == 2:
+        number = int(sys.argv[1])
     queue = Pqueue(NumberComparison)
-    print('Inserting into queue...')
-    for num in range(1000,0,-1):
+    print('Inserting {} items into queue...'.format(number))
+    for num in range(number,0,-1):
         queue.push(num)
         # print(queue.list)
     queue.push(1)
