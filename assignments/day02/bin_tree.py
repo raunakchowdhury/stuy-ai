@@ -1,3 +1,7 @@
+#! /usr/bin/python3
+
+import math
+
 class Node:
     def __init__(self, data):
         self.value = data
@@ -142,7 +146,7 @@ def process(in_file_name, out_file_name):
     second_ints = [int(x) for x in second_words]
     depths = [tree.has_depth(x) for x in second_ints]
     print('Average:', sum(depths) / len(depths))
-    print('Length of tree:', len(tree.get_ordered_list()))
+    print('Length of tree after log:', math.log(len(tree.get_ordered_list()),2))
     f.close()
     # write all depths into the second file
     f = open(out_file_name, 'w')
