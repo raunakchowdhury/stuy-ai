@@ -112,9 +112,7 @@ class Pqueue:
         if len(self.list) == 0:
             return []
         size = self.size
-        ordered_list = []
-        for i in range(size):
-            ordered_list.append(self.pop())
+        ordered_list = [self.pop() for i in range(size)]
         return ordered_list
 
 
