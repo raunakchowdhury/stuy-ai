@@ -1,0 +1,4 @@
+head,12
+love,15
+bozo,0
+cake,18

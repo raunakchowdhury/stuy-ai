@@ -71,7 +71,6 @@ class Pqueue:
         current_index = 1
 
         while current_index < self.size and self.list[2 * current_index] and self.list[2 * current_index + 1]:
-            # print(current_index)
             # checks if current element > either child node
             if self.cmpfunc(self.list[current_index], self.list[2 * current_index]) == 1 or self.cmpfunc(self.list[current_index], self.list[2 * current_index + 1]) == 1:
                 comparison = self.cmpfunc(self.list[2 * current_index], self.list[2 * current_index + 1])
@@ -87,9 +86,7 @@ class Pqueue:
                 else:
                     self.list[current_index], self.list[2 * current_index] = self.list[2 * current_index], self.list[current_index]
                     current_index = 2 * current_index
-            else:
-                break
-            # print('current_index:', current_index, 'current value:', self.list[current_index])
+            # print('current_index:', current_index, 'current value:', self.list[current_index], queue.list)
 
         # if one of the nodes don't exist
         if not self.list[2 * current_index + 1] and self.list[2 * current_index]:
@@ -118,19 +115,6 @@ class Pqueue:
         ordered_list = [self.pop() for i in range(size)]
         return ordered_list
 
-    def internal_list(self):
-        '''
-        returns all valid elements of the list.
-        '''
-        return self.list[1:self.size+1]
-
-    def push_all(self, push_list):
-        '''
-        pushes all elements into the queue.
-        '''
-        for element in push_list:
-            self.push(element)
-
 
 if __name__ == '__main__':
     import sys
@@ -144,8 +128,6 @@ if __name__ == '__main__':
         # print(queue.list)
     queue.push(1)
     print('Current list:', queue.list)
-    print('Printing a peek:', queue.peek())
-    print()
     print('Printing pop and queue after pop:', queue.pop(), queue.list)
     returned_list = queue.to_list()
     try:
@@ -157,17 +139,7 @@ if __name__ == '__main__':
     print('Printing returned list:', returned_list)
     print('Printing to_list() again for giggles:', queue.to_list())
     print('Pushing again to test...')
-    num_list = []
     for num in range(100,0,-1):
-        num_list.append(num)
-    queue.push_all(num_list)
-    print('Printing queue.list:', queue.internal_list())
+        queue.push(num)
+    print('Printing queue.list:', queue.list)
 
-    p=Pqueue(NumberComparison)
-    p.push_all(list('PETERBR'[::-1]))
-    print(p.internal_list())
-    print('pop')
-    p.pop()
-    print('pop')
-    p.pop()
-    print(p.internal_list())
