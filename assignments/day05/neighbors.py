@@ -28,14 +28,14 @@ def process(infile, outfile):
                     new_word = word[0:2] + letter + word[3:]
                 else:
                     new_word = word[:3] + letter
-                print(new_word)
+                # print(new_word)
                 if new_word in data and new_word != word:
                     ans_dict[word].append(new_word)
-    print(ans_dict['cake'])
+    # print(ans_dict['cake'])
     write_str = ''
-    for key,value in ans_dict.items():
-        write_str += key + ',' + str(len(value)) + '\n'
-    print(write_str)
+    for entry in words:
+        write_str += entry + ',' + str(len(ans_dict[entry])) + '\n'
+    # print(write_str)
     g = open(outfile,'w')
     g.write(write_str)
 

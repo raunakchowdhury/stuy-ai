@@ -41,7 +41,6 @@ class Dlist:
         node = self.first
         prev_node = node
         while node:
-            # print(node.value)
             if node.value >= value:
                 if node.previous == None and node.next == None:
                     node.previous = n_node
@@ -53,10 +52,15 @@ class Dlist:
                     node.previous = n_node
                     n_node.next = node
                     self.first = n_node
+                    return
                 n_node.previous = node.previous
                 n_node.next = node
                 node.previous.next = n_node
                 node.previous = n_node
+                return
+            if node.next == None:
+                node.next = n_node
+                n_node.previous = node
                 return
             prev_node = node
             node = node.next
@@ -66,7 +70,6 @@ class Dlist:
         # value in the list and return True, or return False if not found
         node = self.first
         while node:
-            print(node.value)
             if value == node.value:
                 # forgot first edge case where first is only node
                 if node.previous == None and node.next == None:
@@ -88,7 +91,6 @@ class Dlist:
                 return True
             node = node.next
         return False
-
 
     def tolist(self):
         # your code to return a list of the values in order,
@@ -114,7 +116,7 @@ class Dlist:
 def insert_all(the_dlist, the_input_list):
   for element in the_input_list:
     the_dlist.insert(element)
-        
+
 if __name__ == '__main__':
     import sys
     process(sys.argv[1], sys.argv[2])
