@@ -1,6 +1,1 @@
-head,12
-love,15
-bozo,0
-cake,18
-bags,21
-tarp,9
+bear,bead,bend,band,bane,cane,care,

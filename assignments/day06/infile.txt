@@ -1,6 +1,5 @@
-head
-love
-bozo
-cake
-bags
-tarp
+head,tail
+hate,love
+read,head
+hazy,frog
+head,ache

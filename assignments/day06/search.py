@@ -95,7 +95,6 @@ class Pqueue:
             else:
                 break
             # print('current_index:', current_index, 'current value:', self.list[current_index])
-
         # print(self.list[current_index])
         # print(self.list)
         # if one of the nodes don't exist
@@ -146,7 +145,7 @@ def setup(len_word):
     words = open('dictall.txt', 'r').read().splitlines()
     data = set()
     for word in words:
-        if len(word) == 4:
+        if len(word) == len_word:
             data.add(word)
     return data
 
@@ -182,65 +181,46 @@ def num_transformations(curr_word, target):
             different_chars += 1
     return different_chars
 
-def search(start, target):
+def search(start, target, data):
     '''
     uses A* search to find the smallest sequence of steps to the target.
     returns a list of steps.
     '''
     explored = set()
     frontier = Pqueue(NumberComparison)
-    data = setup(len(target))
-    # route = {}
-    traversal_cost = 0
-    # previous_node = (0 ,'START', [])
-
     frontier.push((num_transformations(start, target), start, [start]))
-
+    # search ops; len(curr_path) - 1 is the traversal_cost
     while frontier.size != 0:
         current_node = frontier.pop()
-        # print(current_node)
-    # print(previous_node, current_node)
-        traversal_cost += 1
-    # print(current_node)
         if current_node[1] == target:
-            # route[current_node[1]] = previous_node[1]
             break
         elif current_node[1] not in explored:
             explored.add(current_node[1])
             neighbors = get_neighbors(current_node[1], data)
-            # route[current_node[1]] = previous_node[1]
-            # previous_node = (current_node[0], current_node[1])
-            # print(neighbors)
             for neighbor in neighbors:
-                # print(neighbor, neighbor not in explored)
                 if neighbor not in explored:
-                    # print(current_node == previous_node)
                     curr_path = current_node[2][:]
-                    # print(curr_path, current_node[2], '\n\n')
                     curr_path.append(neighbor)
-                    node = (num_transformations(neighbor, target) + traversal_cost, neighbor, curr_path)
-                    #print(node)
+                    node = (num_transformations(neighbor, target) + len(curr_path) - 1, neighbor, curr_path)
                     frontier.push(node)
     if frontier.size == 0:
         return [start,target]
-    # post processing
-    # print(frontier.list)
-    # route_list = []
-    # # print(route)
-    # current_word = current_node[1]
-    # while current_word != 'START':
-    #     route_list.append(current_word)
-    #     # print(current_word == route[current_word], current_word, route[current_word])
-    #     current_word = route[current_word]
-    #     # print(route)
-    # route_list.reverse()
-    # return route_list, len(route_list)
     return current_node[2]
 
+def process(infile, outfile):
+    '''
+    Takes in a file of doublets and returns the path if possible.
+    '''
+    words = open(infile, 'r').read().splitlines()
+    words = [word.split(',') for word in words]
+    data = setup(len(words[0][0]))
+    words = [search(word[0], word[1], data) for word in words]
+    write_str = ''
+    for solved_list in words:
+        solved_list.append('\n')
+        write_str += ','.join(solved_list)
+    writefile = open(outfile, 'w')
+    writefile.write(write_str)
 
 if __name__ == '__main__':
-    print(search('head','tail'))
-    print(search('hazy','frog'))
-    print(search('read', 'head'))
-    print(search('head','ache'))
-    # search('head','tail')
+    process(sys.argv[1], sys.argv[2])
