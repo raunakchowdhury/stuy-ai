@@ -1,5 +1,9 @@
 #! /usr/bin/python3
 
+import sys
+
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
 def OrdinaryComparison(a,b):
     if len(a) < len(b): return -1
     if len(a) == len(b): return 0
@@ -68,6 +72,7 @@ class Pqueue:
         # if there is one element remaining
         if self.size <= 1:
             return popped_element
+        # print('size: {} {}'.format(self.size, self.list))
         current_index = 1
 
         while current_index < self.size and 2 * current_index < self.size and 2 * current_index + 1 < self.size:
@@ -91,6 +96,8 @@ class Pqueue:
                 break
             # print('current_index:', current_index, 'current value:', self.list[current_index])
 
+        # print(self.list[current_index])
+        # print(self.list)
         # if one of the nodes don't exist
         if not 2 * current_index + 1 < self.size and 2 * current_index < self.size:
             if self.cmpfunc(self.list[current_index], self.list[2 * current_index]) == 1:
@@ -132,42 +139,108 @@ class Pqueue:
             self.push(element)
 
 
-if __name__ == '__main__':
-    import sys
-    number = 1000
-    if len(sys.argv) == 2:
-        number = int(sys.argv[1])
-    queue = Pqueue(NumberComparison)
-    print('Inserting {} items into queue...'.format(number))
-    for num in range(number,0,-1):
-        queue.push(num)
-        # print(queue.list)
-    queue.push(1)
-    print('Current list:', queue.list)
-    print('Printing a peek:', queue.peek())
-    print()
-    print('Printing pop and queue after pop:', queue.pop(), queue.list)
-    returned_list = queue.to_list()
-    try:
-        print('Checking if it\'s sorted...')
-        assert sorted(returned_list) == returned_list
-        print('It\'s sorted!\n')
-    except:
-        print('Oops, something went wrong with to_list()! Printing the list now:\n')
-    print('Printing returned list:', returned_list)
-    print('Printing to_list() again for giggles:', queue.to_list())
-    print('Pushing again to test...')
-    num_list = []
-    for num in range(100,0,-1):
-        num_list.append(num)
-    queue.push_all(num_list)
-    print('Printing queue.list:', queue.internal_list())
+def setup(len_word):
+    '''
+    Based on the # of characters given, returns a set of all the words with that # of characters in dictall.
+    '''
+    words = open('dictall.txt', 'r').read().splitlines()
+    data = set()
+    for word in words:
+        if len(word) == 4:
+            data.add(word)
+    return data
 
-    p=Pqueue(NumberComparison)
-    p.push_all(list('PETERBR'[::-1]))
-    print(p.internal_list())
-    print('pop')
-    p.pop()
-    print('pop')
-    p.pop()
-    print(p.internal_list())
+def get_neighbors(word, data):
+    '''
+    Finds the closest neighbors.
+    '''
+    global letters
+    neighbors = []
+    for index in range(4):
+        for letter in letters:
+            if index == 0:
+                new_word = letter + word[1:]
+            elif index == 1:
+                new_word = word[0:1] + letter + word[2:]
+            elif index == 2:
+                new_word = word[0:2] + letter + word[3:]
+            else:
+                new_word = word[:3] + letter
+            # print(new_word)
+            if new_word in data and new_word != word:
+                neighbors.append(new_word)
+    return neighbors
+
+def num_transformations(curr_word, target):
+    '''
+    Finds min # of characters from current word to target.
+    '''
+    different_chars = 0
+    length = len(target)
+    for index in range(length):
+        if curr_word[index] != target[index]:
+            different_chars += 1
+    return different_chars
+
+def search(start, target):
+    '''
+    uses A* search to find the smallest sequence of steps to the target.
+    returns a list of steps.
+    '''
+    explored = set()
+    frontier = Pqueue(NumberComparison)
+    data = setup(len(target))
+    # route = {}
+    traversal_cost = 0
+    # previous_node = (0 ,'START', [])
+
+    frontier.push((num_transformations(start, target), start, [start]))
+
+    while frontier.size != 0:
+        current_node = frontier.pop()
+        # print(current_node)
+    # print(previous_node, current_node)
+        traversal_cost += 1
+    # print(current_node)
+        if current_node[1] == target:
+            # route[current_node[1]] = previous_node[1]
+            break
+        elif current_node[1] not in explored:
+            explored.add(current_node[1])
+            neighbors = get_neighbors(current_node[1], data)
+            # route[current_node[1]] = previous_node[1]
+            # previous_node = (current_node[0], current_node[1])
+            # print(neighbors)
+            for neighbor in neighbors:
+                # print(neighbor, neighbor not in explored)
+                if neighbor not in explored:
+                    # print(current_node == previous_node)
+                    curr_path = current_node[2][:]
+                    # print(curr_path, current_node[2], '\n\n')
+                    curr_path.append(neighbor)
+                    node = (num_transformations(neighbor, target) + traversal_cost, neighbor, curr_path)
+                    #print(node)
+                    frontier.push(node)
+    if frontier.size == 0:
+        return [start,target]
+    # post processing
+    # print(frontier.list)
+    # route_list = []
+    # # print(route)
+    # current_word = current_node[1]
+    # while current_word != 'START':
+    #     route_list.append(current_word)
+    #     # print(current_word == route[current_word], current_word, route[current_word])
+    #     current_word = route[current_word]
+    #     # print(route)
+    # route_list.reverse()
+    # return route_list, len(route_list)
+    return current_node[2]
+
+
+if __name__ == '__main__':
+    print(search('head','tail'))
+    print(search('hazy','frog'))
+    print(search('read', 'head'))
+    print(search('head','ache'))
+    # search('head','tail')
