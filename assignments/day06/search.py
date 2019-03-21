@@ -155,16 +155,14 @@ def get_neighbors(word, data):
     '''
     global letters
     neighbors = []
-    for index in range(4):
+    for index in range(len(word)):
         for letter in letters:
             if index == 0:
                 new_word = letter + word[1:]
-            elif index == 1:
-                new_word = word[0:1] + letter + word[2:]
-            elif index == 2:
-                new_word = word[0:2] + letter + word[3:]
+            elif index == len(word) - 1:
+                new_word = word[:index] + letter
             else:
-                new_word = word[:3] + letter
+                new_word = word[0:index] + letter + word[index+1:]
             # print(new_word)
             if new_word in data and new_word != word:
                 neighbors.append(new_word)
@@ -217,8 +215,8 @@ def process(infile, outfile):
     words = [search(word[0], word[1], data) for word in words]
     write_str = ''
     for solved_list in words:
-        solved_list.append('\n')
-        write_str += ','.join(solved_list)
+        # solved_list.append('\n')
+        write_str += ','.join(solved_list) + '\n'
     writefile = open(outfile, 'w')
     writefile.write(write_str)
 
