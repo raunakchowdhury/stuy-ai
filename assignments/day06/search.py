@@ -205,14 +205,50 @@ def search(start, target, data):
         return [start,target]
     return current_node[2]
 
-def process(infile, outfile):
+def extended_search(start, target, data):
+    '''
+    uses a wack A* search to find the largest sequence of steps to the target.
+    returns a list of steps.
+    '''
+    explored = set()
+    frontier = Pqueue(NumberComparison)
+    frontier.push((num_transformations(start, target), start, [start]))
+    # search ops; len(curr_path) - 1 is the traversal_cost
+    while frontier.size != 0:
+        current_node = frontier.pop()
+        if current_node[1] == target:
+            break
+        elif current_node[1] not in explored:
+            explored.add(current_node[1])
+            neighbors = get_neighbors(current_node[1], data)
+            for neighbor in neighbors:
+                if neighbor not in explored:
+                    curr_path = current_node[2][:]
+                    curr_path.append(neighbor)
+                    node = ((len(curr_path) - 1) * -1 + num_transformations(neighbor, target) * -1, neighbor, curr_path)
+                    # print(node[0])
+                    frontier.push(node)
+    if frontier.size == 0:
+        return [start,target]
+    print(len(current_node[2]))
+    # verify all stings are unique
+    check_set = set()
+    for string in current_node[2]:
+        if string not in check_set:
+            check_set.add(string)
+        else:
+            raise ValueException('Not unique!')
+    return current_node[2]
+
+
+def process(infile, outfile, algorithm = search):
     '''
     Takes in a file of doublets and returns the path if possible.
     '''
     words = open(infile, 'r').read().splitlines()
     words = [word.split(',') for word in words]
     data = setup(len(words[0][0]))
-    words = [search(word[0], word[1], data) for word in words]
+    words = [algorithm(word[0], word[1], data) for word in words]
     write_str = ''
     for solved_list in words:
         # solved_list.append('\n')
@@ -220,5 +256,33 @@ def process(infile, outfile):
     writefile = open(outfile, 'w')
     writefile.write(write_str)
 
+def search_for_longest_path(length):
+    '''
+    searches for longest path
+    '''
+    def inner_setup(len_word):
+        '''
+        Based on the # of characters given, returns a set of all the words with that # of characters in dictall.
+        '''
+        all_words = []
+        words = open('dictall.txt', 'r').read().splitlines()
+        data = set()
+        for word in words:
+            if len(word) == len_word:
+                data.add(word)
+                all_words.append(word)
+        return data, all_words
+
+    data, all_words = inner_setup(length)
+    longest_path = 0
+    for index in range(len(all_words)):
+        for second_index in range(len(all_words)):
+            curr_path = len(search(all_words[index], all_words[second_index], data))
+            if curr_path > longest_path:
+                print('New longest path!: {} for word pair {},{}'.format(curr_path, all_words[index], all_words[second_index]))
+                longest_path = curr_path
+    return longest_path
+
 if __name__ == '__main__':
-    process(sys.argv[1], sys.argv[2])
+    process(sys.argv[1], sys.argv[2], search)
+    # print(search_for_longest_path(4))
