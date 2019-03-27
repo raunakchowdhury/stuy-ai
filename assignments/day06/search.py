@@ -284,5 +284,5 @@ def search_for_longest_path(length):
     return longest_path
 
 if __name__ == '__main__':
-    process(sys.argv[1], sys.argv[2], search)
+    process(sys.argv[1], sys.argv[2], extended_search)
     # print(search_for_longest_path(4))
