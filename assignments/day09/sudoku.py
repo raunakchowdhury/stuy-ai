@@ -310,6 +310,7 @@ def test_sudoku(sudoku, board, function_label):
     print('The algorithm backtracked {} times for {} using {}. Elapsed time: {}\n'.format(num_backtracks, board, function_label, '%.3f'% elapsed_time))
     print(string_board(solved_board))
     print()
+    return '{},{},{}\n'.format(board, num_backtracks, '%.3f'% elapsed_time)
 
 
 
@@ -319,9 +320,14 @@ if __name__ == '__main__':
         process(sys.argv[1], sys.argv[2], sys.argv[3])
     else:
         process(sys.argv[1], sys.argv[2])
-        for sudoku in [(smartest_sudoku, 'smartest_sudoku')]: #(smarter_sudoku, 'smarter_sudoku'),
-            for board in [ 'name,Easy-NYTimes,unsolved', 'name,Medium-NYTimes,unsolved', 'name,Hard-NYTimes,unsolved', 'name,hardest-sudoku-telegraph,unsolved', 'name,sudokugarden.de/files/100sudoku2-en.pdf-Nr-100,unsolved', 'name,sudokugarden.de/files/100sudoku2-en.pdf-Nr-50,unsolved']:
-                test_sudoku(sudoku[0], board, sudoku[1])
+        csv_string = 'name,board_name,unsolved,num_backtracks,time_elapsed\n'
+        for sudoku in [(naive_sudoku, 'naive_sudoku'), (smarter_sudoku, 'smarter_sudoku'), (smartest_sudoku, 'smartest_sudoku')]: #(smarter_sudoku, 'smarter_sudoku'),
+            for board in [ 'name,WebSudoku-Hard,unsolved', 'name,WebSudoku-Evil,unsolved']: #'name,Easy-NYTimes,unsolved', 'name,Medium-NYTimes,unsolved', 'name,Hard-NYTimes,unsolved', 'name,hardest-sudoku-telegraph,unsolved', 'name,sudokugarden.de/files/100sudoku2-en.pdf-Nr-100,unsolved', 'name,sudokugarden.de/files/100sudoku2-en.pdf-Nr-50,unsolved']:
+                csv_string += test_sudoku(sudoku[0], board, sudoku[1])
+                print(csv_string)
+        # f = open(sys.argv[2], 'w')
+        # f.write(csv_string)
+
 
     # print_board(games[9])
     # print_board(sudoku(games['A7-1,Hardest,unsolved']))
