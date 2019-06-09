@@ -38,13 +38,25 @@ def CreateAllBoards(layout):
         raise BaseException('Not correct length! Input had a length of {}'.format(len(layout)))
     # recursive function to manufacture all BoardNode nodes and place them into the AllBoards dictionary
     player = 'x'
+
+    # hardcode the first move because processing takes too long
+    # generate the rest of the boards based on that first move
+    if layout == '_' * 9:
+        pos = random.choice([0,2,4,6,8])
+        current_layout = layout[0:pos] + 'x' + layout[pos+1:]
+        node = BoardNode(layout)
+        AllBoards[layout] = node
+        node.children.append(current_layout)
+    else:
+        current_layout = layout[:]
+
     # determine who goes first initially
-    num_o_played = layout.count('o')
-    num_x_played = layout.count('x')
+    num_o_played = current_layout.count('o')
+    num_x_played = current_layout.count('x')
     if num_o_played + 1 == num_x_played: # if 'o' needs to move next
         player = 'o'
     print("Player's move:", player)
-    CreateAllBoardsHelper(layout, None, player, None)
+    CreateAllBoardsHelper(current_layout, None, player, None)
 
 def CreateAllBoardsHelper(layout, parent, player, pos):
     """recursive helper"""
@@ -170,6 +182,13 @@ def string_board(board):
 def process(layout):
     """Prints out calculations based on what was given."""
     board_node = AllBoards[layout]
+    # final post-processing for an empty layout
+    if layout == '_' * 9:
+        child = AllBoards[board_node.children[0]]
+        board_node.final_state = child.final_state
+        board_node.moves_to_end = child.moves_to_end + 1
+        board_node.best_move = find_spot(layout, child.layout)
+
     if board_node.best_move == -1:
         print('Board already in win or draw state!')
         return
